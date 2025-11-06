@@ -50,9 +50,9 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 sh '''
-                    echo "🏗️ Building Docker images..."
-                    docker build -t ${BACKEND_IMAGE}:latest -f Dockerfile.backend .
-                    docker build -t ${FRONTEND_IMAGE}:latest -f frontend/Dockerfile.frontend frontend
+                    echo "🏗️ Building Docker images (no cache to force rebuild)..."
+                    docker build --no-cache -t ${BACKEND_IMAGE}:latest -f Dockerfile.backend .
+                    docker build --no-cache -t ${FRONTEND_IMAGE}:latest -f frontend/Dockerfile.frontend frontend
                 '''
             }
         }
