@@ -1,0 +1,83 @@
+/* Prevent text selection */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Prevent copying */
+* {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  -user-drag: none;
+}
+
+/* Prevent context menu on images and videos, but allow interaction on UI elements */
+img, video {
+  pointer-events: none;
+}
+
+/* Allow pointer events on interactive elements */
+button img,
+a img,
+.cursor-pointer img,
+[role="button"] img,
+button > img,
+div[onclick] img {
+  pointer-events: auto;
+}
+
+/* Disable screenshot and recording attempts */
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Permanent overlay to make screenshots appear black/dark */
+.screenshot-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Semi-transparent black to darken screenshots */
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Flash overlay for warning message on detection */
+.flash-overlay {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 100px;
+  background: white;
+  border: 2px solid red;
+  border-radius: 10px;
+  z-index: 10000;
+  pointer-events: none;
+  display: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  line-height: 100px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Allow interaction on specific elements if needed */
+button, input, textarea, select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

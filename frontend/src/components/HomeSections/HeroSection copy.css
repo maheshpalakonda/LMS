@@ -1,0 +1,45 @@
+.hero-carousel {
+  background-color: #4b1fc7;
+  color: white;
+  padding: 60px 100px;
+}
+
+.hero-slide {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.hero-text {
+  width: 45%;
+}
+
+.hero-buttons button {
+  margin-right: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.get-started {
+  background: white;
+  color: #4b1fc7;
+}
+
+.learn-ai {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.hero-image {
+  width: 40%;
+  border-radius: 12px;
+}
+
+.slick-dots li button:before {
+  color: white;
+}
