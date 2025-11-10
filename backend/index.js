@@ -19,29 +19,41 @@ import notesRouter from "./routes/notesRoute.js";
 
 dotenv.config();
 
+// ========================
+// 🔹 Server & App Setup
+// ========================
 const port = process.env.PORT || 8000;
 const app = express();
 
 // ========================
-// 🔹 Domain & Origins
+// 🔹 Allowed Origins (update for production domain)
 // ========================
-const FRONTEND_URL = process.env.FRONTEND_URL || "https://techsproutlms.com";
-const FRONTEND_URL_2 = process.env.FRONTEND_URL_2 || "https://www.techsproutlms.com";
-const API_SELF = process.env.API_SELF || `http://localhost:${port}`;
-const allowedOrigins = [FRONTEND_URL, FRONTEND_URL_2, API_SELF].filter(Boolean);
+const allowedOrigins = [
+  "https://techsproutlms.com",
+  "https://www.techsproutlms.com",
+  "http://localhost:5173",
+  "http://localhost:5175",
+  `http://localhost:${port}`,
+];
 
 // ========================
-// 🔹 CORS Setup (Critical for HTTPS)
+// 🔹 Middleware Setup (CORS + JSON + Cookies)
 // ========================
-app.set("trust proxy", 1); // Required for cookies behind proxy (HTTPS)
+app.set("trust proxy", 1); // For cookies via HTTPS & reverse proxy
 app.use(express.json());
 app.use(cookieParser());
 
+// ✅ Improved production-safe CORS handler
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (!origin) return callback(null, true); // allow non-browser clients
+      const normalizedOrigin = origin.replace(/\/$/, "");
+      const isAllowed = allowedOrigins.some(
+        (allowed) => normalizedOrigin === allowed || normalizedOrigin.startsWith(allowed)
+      );
+      if (isAllowed) return callback(null, true);
+      console.error("❌ CORS blocked:", origin);
       return callback(new Error("CORS not allowed for origin: " + origin), false);
     },
     credentials: true,
@@ -50,7 +62,7 @@ app.use(
 );
 
 // ========================
-// 🔹 Routers
+// 🔹 API Routes
 // ========================
 app.use("/api/auth", authRouter);
 app.use("/api/live", liveRouter);
@@ -63,12 +75,13 @@ app.use("/api/admin", adminRouter);
 app.use("/api/videos", videoRouter);
 app.use("/api/notes", notesRouter);
 
+// Default route
 app.get("/", (req, res) => {
-  res.send("✅ LMS Backend Running Successfully");
+  res.send("✅ LMS Backend Running Successfully (TechSproutLMS.com)");
 });
 
 // ========================
-// 🔹 Socket.IO Setup
+// 🔹 Socket.IO Setup (Live Lectures & Chat)
 // ========================
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
@@ -104,7 +117,11 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data) => {
     socket
       .to(data.roomId)
-      .emit("receive-message", { message: data.message, sender: socket.id, timestamp: new Date() });
+      .emit("receive-message", {
+        message: data.message,
+        sender: socket.id,
+        timestamp: new Date(),
+      });
   });
 
   socket.on("disconnect", () => {
