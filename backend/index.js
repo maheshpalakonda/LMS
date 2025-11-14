@@ -32,7 +32,7 @@ const allowedOrigins = [
   "https://techsproutlms.com",
   "https://www.techsproutlms.com",
   "http://localhost:5173",
-  "http://localhost:5175",
+  "http://localhost:5174",
   `http://localhost:${port}`,
 ];
 
